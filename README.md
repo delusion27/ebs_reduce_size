@@ -1,6 +1,6 @@
 # ebs_reduce_size
 
-因为EBS卷目前只支持扩容，无法直接缩减，此脚本可以自动将EBS的容量缩小。实现的原理是先创建一个新的EBS卷挂载到EC2上，将数据同步到新的数据盘上，然后将老的EBS卷卸载。这个脚本的执行模式和结果如下：
+Because EBS volumes currently only support expansion and cannot be directly reduced, this script can automatically reduce the capacity of EBS. The principle of implementation is to first create a new EBS volume and mount it on EC2, synchronize the data to the new data disk, and then unmount the old EBS volume. The execution mode and results of this script are as follows:
 
 ----------------------------------------------------------------------------
 ```shell
@@ -36,31 +36,17 @@ i-02896be77fc1c18ee restarted successfully
 ```
 
 
-Note: 执行此脚本需要带几个参数
+Note: The execution of this script requires several parameters 
+         -instance_id: the id of the instance to be operated 
+         -origin_volume_id: the id of the volume to be replaced 
+         -az: the availability zone where the new ebs volume is created. It is consistent with the availability zone where the EC2 instance is located 
+         -newvolumesize: the size of the newly created EBS volume (you need to select the appropriate new volume size) 
+         -source_data_mountpoint_path: the mount point path of the original data disk, That is, the path of the original data to be synchronized to the new disk in the operating system
 
-- instance_id：要操作的实例id
-
-- origin_volume_id: 要被替换的volume id
-
-- az: 新的ebs卷创建所在的可用区，需要和EC2实例所在的可用区保持一致
-
-- newvolumesize: 新创建的EBS卷的大小（需要根据用户的判断选择合适的新卷大小）
-
-- source_data_mountpoint_path: 原有数据盘的mount point路径，即要同步到新盘的原始数据在操作系统中的路径
--------------------------------------------------------------------------------
-
-因为涉及到数据盘，请务必现在测试环境完成测试后再应用到其它机器上。程序开始的时候会提示先对实例做AMI备份。
-
-
-1. 该脚本目前只适用于linux的操作系统
-
-2. 在执行脚本期间，对应的EC2会有stop和重启的过程，所以会有down机时间
-
-3. 该脚本目前只适用于数据盘，root盘的缩减不适用
-
-4. 该脚本没有加载aksk或者assume role. 用的当前profile配置的aksk来执行各种命令，执行该脚本需要先配置cli profile
-
-5. 新创建的EBS volume默认用的设备名是/dev/sdk, 如果需要更改，需要在脚本中替换/dev/sdk为其它设备名
-
-6. 该脚本并不对卸载后的EBS卷进行删除动作，需要手动做。
+Because it involves To the data disk, please be sure to complete the test in the current test environment before applying it to other machines. When the program starts, you will be prompted to do an AMI backup of the instance first. 
+         1. The script is currently only applicable to the Linux operating system
+         2. During the execution of the script, the corresponding EC2 will have a stop and restart process, so there will be down time
+         3. This The script currently only applies to data disks, and the reduction of the root disk does not apply. 
+         4. The script does not assume roles. Please ensure that you have aws cli configured with proper credentials 
+         5. The default device name of the newly created EBS volume is
 
