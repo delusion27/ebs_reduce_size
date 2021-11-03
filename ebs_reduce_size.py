@@ -1,5 +1,6 @@
 """
-#Author: Xia Weidong
+#Author: Xia Weidong 
+#Revised: delusion27
 #Function: This script is used for helping auto shrink EBS volume.
 """
 import boto3
@@ -19,7 +20,6 @@ def safety_check():
 
 
 def terminal_function(command, ip):
-    key_path = '/Users/weidox/documents/lab/emrkp.pem'
     tmp_command = 'ssh -i ' + key_path + ' ec2-user@' + ip + ' \"' + command + '\"'
     print(tmp_command)
     result = subprocess.call(tmp_command, shell=True)
