@@ -20,7 +20,7 @@ def safety_check():
 
 
 def terminal_function(command, ip):
-    tmp_command = 'ssh -i ' + key_path + ' ec2-user@' + ip + ' \"' + command + '\"'
+    tmp_command = 'ssh -i ' + keypath + ' ubuntu@' + ip + ' \"' + command + '\"'
     print(tmp_command)
     result = subprocess.call(tmp_command, shell=True)
     return result
@@ -65,7 +65,7 @@ def createvolume(instance_id):
     response = ec2.create_volume (
         AvailabilityZone=az,
         Size=newvolumesize,
-        VolumeType='gp2',
+        VolumeType='gp3',
     )
 
     new_volume_id = response.id
@@ -88,8 +88,8 @@ def createvolume(instance_id):
 
 def my_test():
     # result = terminal_function('sudo blkid | grep xvdk | awk \'{print $2  \\"    %s'%(
-    # target_data_mountpoint_path)+'       xfs    defaults,nofail  0  2\\"}\' >>/home/ec2-user/test.txt', ec2_ip)
-    result = terminal_function('sudo echo \\"/dev/sdk    %s' % source_data_mountpoint_path + 'xfs    defaults,nofail  '
+    # target_data_mountpoint_path)+'       ext4    defaults,nofail  0  2\\"}\' >>/home/ec2-user/test.txt', ec2_ip)
+    result = terminal_function('sudo echo \\"/dev/sdk    %s' % source_data_mountpoint_path + 'ext4    defaults,nofail  '
                                                                                              '0  2\\" '
                                                                                              '>>/home/ec2-user/test.txt', ec2_ip)
     print(result)
@@ -103,7 +103,7 @@ def my_update_resize():
     createvolume(instance_id)
 
     # Mount the volume; tested multiple times, ssm didn't work consitently, therefore make the file system directly
-    terminal_function('sudo mkfs -t xfs /dev/sdk', ec2_ip)
+    terminal_function('sudo mkfs -t ext4 /dev/sdk', ec2_ip)
 
     # Create new data folder
     terminal_function('sudo mkdir /ebs_resize_data_tmp'+'', ec2_ip)
