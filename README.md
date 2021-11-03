@@ -4,7 +4,7 @@ Because EBS volumes currently only support expansion and cannot be directly redu
 
 ----------------------------------------------------------------------------
 ```shell
-$ python3 ebs_reduce_size.py --instance_id i-02896be77fc1c18ee --instance_ip 52.80.240.170 --origin_volume_id vol-0eef81a7683330018 --az cn-north-1a --newvolumesize 6 --source_data_mountpoint_path /data1
+$ python3 ebs_reduce_size.py --instance_id i-02896be77fc1c18ee --instance_ip 52.80.240.170 --origin_volume_id vol-0eef81a7683330018 --az cn-north-1a --newvolumesize 6 --source_data_mountpoint_path /data1 --keypath C:/Users/Documents/foo/bar.pem
 ```
 
 ```shell
